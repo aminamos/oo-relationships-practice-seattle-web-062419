@@ -9,7 +9,9 @@ class Bakery
     end
 
     def ingredients
-
+        Bakery.desserts.select do |dessert|
+            dessert.ingredients
+        end
     end
 
     def desserts
@@ -36,12 +38,11 @@ class Desserts
     def initialize(name,bakery, *ingredients)
         @name = name
         @bakery = bakery
-        
         @@all << self
     end
 
     def ingredients
-        Desserts.all.select |dessert|
+        Desserts.all.select do |dessert|
             dessert.ingredients
         end
     end
