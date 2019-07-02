@@ -31,17 +31,18 @@ class User
 
     def pledge_count
         count = 0
-        Pledge.all
 
+        Pledge.all.each do |pledge|
+            if pledge.user == self
+                count += 1
+            end
+        end
+        count
     end
 
     def self.multi_pledger
-    # returns all users who have pledged to multiple projects
-
         User.all.select do |user|
-            Pledge.all.select do |pledge|
-                pledge.user == user
-            end
+            user.pledge_count > 1
         end
     end
 

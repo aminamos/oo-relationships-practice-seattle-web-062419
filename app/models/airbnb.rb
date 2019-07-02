@@ -14,22 +14,22 @@ class Listing
         @@all << self
     end
 
-    def guests(listing)
-        guest_array = []
+    def guests
+        guest_a = []
         Trip.all.select {|trip| 
-        if trip.listing == listing
-            guest_array << trip.guest
-        end
-        }
-        guest_array
+            if trip.listing == self
+                guest_a << trip.guest
+            end
+    }
+        guest_a
     end
 
-    def trips(listing)
-        Trip.all.select {|trip| trip.listing == listing}
+    def trips
+        Trip.all.select {|trip| trip.listing == self}
     end
 
     def trip_count
-        Trip.all.select {|trip| trip.listing == listing}.count
+        self.trips.count
     end
 
     def self.find_all_by_city(city)
@@ -37,7 +37,16 @@ class Listing
     end
 
     def self.most_popular
-        Trip.all.max_by {|trip| Trip.all.count(trip)}
+        max = 0
+        result = []
+
+        Listing.all.each do |listing|
+            if listing.trip_count > max
+                max = listing.trip_count
+                result = listing
+            end
+        end
+        result
     end
 
     def self.all
@@ -57,31 +66,31 @@ class Guest
         @@all << self
     end
 
-    def listings(name)
+    def listings
         listing_array = []
 
         Trip.all.select do |trip| 
-            if trip.guest == name
+            if trip.guest == self
                 listing_array << trip.listing
             end
         end
-        listing_array
+        listing_array.uniq
     end
 
-    def trips(name)
-        Trip.all.select {|trip| trip.guest == name}
+    def trips
+        Trip.all.select {|trip| trip.guest == self}
     end
 
-    def trip_count(name)
-        Trip.all.select {|trip| trip.guest == name}.count
+    def trip_count
+        self.trips.count
     end
 
     def self.pro_traveller
         array = []
 
-        Guest.all.select do |x|
-            if trip_count(x.name) > 1
-                array << x.name
+        Guest.all.select do |guest|
+            if guest.trip_count > 1
+                array << guest.name
             end
         end
         array
@@ -90,9 +99,9 @@ class Guest
     def self.find_all_by_name(name)
         array = []
 
-        Guest.all.select do |x|
-            if x.name == name
-                array << name
+        Guest.all.select do |guest|
+            if guest.name == name
+                array << guest
             end
         end
         array
@@ -110,19 +119,19 @@ class Trip
 
     @@all = []
 
-    def initialize(listing,guest)
+    def initialize(listing, guest)
         @listing = listing
         @guest = guest
         @@all << self
     end
 
-    def listing
-        @listing
-    end
+    # def listing
+    #     @listing
+    # end
 
-    def guest
-        @guest
-    end
+    # def guest
+    #     @guest
+    # end
 
     def self.all
         @@all

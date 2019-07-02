@@ -8,51 +8,50 @@ class Bakery
         @name = name
     end
 
+    # def add_dessert
+
+    # end
+
     def ingredients
-        Bakery.desserts.select do |dessert|
-            dessert.ingredients
+        list = []
+        Dessert.all.select do |dessert|
+            if dessert.bakery == self
+                list << dessert.ingredient
+            end
         end
+        list
     end
 
     def desserts
-
+        Dessert.all.select do |dessert|
+            dessert.bakery == self
+        end
     end
 
     def average_calories
 
     end
 
-    def self.all
-        @@all
-    end
-
     def shopping_list
 
     end
+
+    def self.all
+        @@all
+    end
 end
 
-class Desserts
+class Dessert
+
+    attr_accessor :name, :bakery, :ingredients
 
     @@all = []
 
-    def initialize(name,bakery, *ingredients)
+    def initialize(name, bakery)
         @name = name
         @bakery = bakery
+        @ingredients = []
         @@all << self
-    end
-
-    def ingredients
-        Desserts.all.select do |dessert|
-            dessert.ingredients
-        end
-    end
-
-    def bakery
-        
-    end
-
-    def calories
-        
     end
 
     def self.all
@@ -60,7 +59,9 @@ class Desserts
     end
 end
 
-class Ingredients
+class Ingredient
+
+    attr_accessor :calorie_count, :dessert
     
     @@all = []
 
@@ -70,16 +71,14 @@ class Ingredients
         @@all << self
     end
 
-    def dessert(ingredient)
-        Dessert.all.select do |edessert|
-            edessert.ingredients == ingredient
-        end
+    def dessert
+        Ingredient.all.select
     end
 
-    def bakery(ingredient)
-        Dessert.all.select do |edessert|
-            if edessert.ingredients == ingredient
-                edessert.bakery
+    def bakery
+        Dessert.all.select do |d|
+            if d.ingredients.include?(self)
+                d.bakery
             end
         end
     end
